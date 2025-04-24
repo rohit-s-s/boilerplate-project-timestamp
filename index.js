@@ -24,6 +24,17 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+app.post("/api/:date",(req,res)=>{
+  const param = new Date(req.params.date)
+  const date = param.getDate()
+  const month = param.getMonth()
+  const yaer = param.getFullYear()
+  const UNIX = new Date(Date.UTC(yaer, month, date)).getTime()
+  const UTC = new Date(Date.UTC(yaer, month, date)).toUTCString()
+  res.json({
+      unix:UNIX, utc: UTC
+  })
+} )
 
 
 // Listen on port set in environment variable or default to 3000
