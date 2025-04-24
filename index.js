@@ -28,8 +28,9 @@ app.get("/api/:date",(req,res)=>{
   const param = new Date(req.params.date)
   
   if(param == "Invalid Date"){
-      const UNIX = new Date(req.params.date * 1000).getTime()
-      const UTC = new Date(req.params.date * 1000).toUTCString()
+      const unixNumber = parseInt(req.params.date)
+      const UNIX = unixNumber
+      const UTC = new Date(unixNumber).toUTCString()
       return res.json({
           unix: UNIX,
           utc: UTC
@@ -38,9 +39,9 @@ app.get("/api/:date",(req,res)=>{
 
   const date = param.getDate()
   const month = param.getMonth()
-  const yaer = param.getFullYear()
-  const UNIX = new Date(Date.UTC(yaer, month, date)).getTime()
-  const UTC = new Date(Date.UTC(yaer, month, date)).toUTCString()
+  const year = param.getFullYear()
+  const UNIX = new Date(Date.UTC(year, month, date)).getTime()
+  const UTC = new Date(Date.UTC(year, month, date)).toUTCString()
   res.json({
       unix:UNIX, utc: UTC
   })
