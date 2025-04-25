@@ -2,52 +2,54 @@
 // where your node app starts
 
 // init project
-var express = require('express');
+var express = require("express");
 var app = express();
 
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
-// so that your API is remotely testable by FCC 
-var cors = require('cors');
-app.use(cors({optionsSuccessStatus: 200}));  // some legacy browsers choke on 204
+// so that your API is remotely testable by FCC
+var cors = require("cors");
+app.use(cors({ optionsSuccessStatus: 200 })); // some legacy browsers choke on 204
 
 // http://expressjs.com/en/starter/static-files.html
-app.use(express.static('public'));
+app.use(express.static("public"));
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (req, res) {
-  res.sendFile(__dirname + '/views/index.html');
+  res.sendFile(__dirname + "/views/index.html");
 });
 
-
-// your first API endpoint... 
+// your first API endpoint...
 app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
+  res.json({ greeting: "hello API" });
 });
 
-app.get("/api/:date",(req,res)=>{
-  const param = new Date(req.params.date)
-  
-  if(param == "Invalid Date"){
-      const unixNumber = parseInt(req.params.date)
-      const UNIX = unixNumber
-      const UTC = new Date(unixNumber).toUTCString()
-      return res.json({
-          unix: UNIX,
-          utc: UTC
-      })
-  };
+app.get("/api/", (req, res) => {
+  const date = new Date();
+  res.json({ unix: date.getTime(), utc: date.toUTCString() });
+});
+app.get("/api/:date", (req, res) => {
+  const param = req.params.date;
+  let date;
 
-  const date = param.getDate()
-  const month = param.getMonth()
-  const year = param.getFullYear()
-  const UNIX = new Date(Date.UTC(year, month, date)).getTime()
-  const UTC = new Date(Date.UTC(year, month, date)).toUTCString()
+  // Check if the param is a number (i.e., Unix timestamp)
+  if (!isNaN(param)) {
+    date = new Date(parseInt(param));
+  } else {
+    date = new Date(param);
+  }
+
+  // Check for invalid date
+  if (isNaN(date.getTime())) {
+    return res.json({ error: "Invalid Date" });
+  }
+
   res.json({
-      unix:UNIX, utc: UTC
-  })
-} )
+    unix: date.getTime(),
+    utc: date.toUTCString(),
+  });
+});
 
 // Listen on port set in environment variable or default to 3000
 var listener = app.listen(process.env.PORT || 3000, function () {
-  console.log('Your app is listening on port ' + listener.address().port);
+  console.log("Your app is Running on port " + listener.address().port);
 });
